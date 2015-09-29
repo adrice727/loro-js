@@ -1,0 +1,37 @@
+{
+  "name": "loro-js",
+  "version": "1.0.0",
+  "description": "An Abstraction Layer for Building Data Stores with RxJS and Immutable.js",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.7.0",
+    "rx-lite": "^4.0.0"
+  },
+  "devDependencies": {
+    "immutable": "^3.7.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrice727/loro-js.git"
+  },
+  "keywords": [
+    "rx",
+    "rxjs",
+    "immutable",
+    "streams",
+    "observable",
+    "async",
+    "data",
+    "model",
+    "store"
+  ],
+  "author": "Aaron Rice",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adrice727/loro-js/issues"
+  },
+  "homepage": "https://github.com/adrice727/loro-js#readme"
+}

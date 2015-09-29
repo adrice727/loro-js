@@ -26,7 +26,7 @@ class Store {
       if ( data ) {
         return this.updateStore(key, data)
       } else {
-        return _projects.set(key, new Rx.BehaviorSubject(Immutable.Map(data)))
+        return _store.set(key, new Rx.BehaviorSubject(Immutable.Map(data)))
       }
     }
   }

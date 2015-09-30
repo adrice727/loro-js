@@ -1,25 +1,56 @@
+/**** Imports ****/
 import axios from 'axios';
 import Immutable from 'immutable';
 import Rx from 'rx-lite';
+
+
+/**** Constants ****/
+const _store = Immutable.Map();
+const _asyncStreams = [];
 
 const errors = {
   0: 'A key is required to add a model to the store',
   1: 'If a key is not provided, the data passed to the store must contain an\
       id parameter which can be used as a key'
-}
+};
+
+/**** Helper Methods ****/
 
 const _defaultMapFunction = (value) => value;
 
-let _store = Immutable.Map();
-let _asyncStreams = [];
+const buildUrl = (options) => {
+    let queryString = '';
+    let url = options.url;
+    let params = options.query;
+    if ( params ) {
+        let buildQuery = (query, key) => [query, key, '=', options[key],'&'].join('');
+        queryString = Object.keys(params).reduce(buildQuery, '?').slice(0,-1);
+    }
+    return url + queryString;
+};
 
+const buildAsyncRequest = (options) => {
+  let method = options.method || 'get';
+  let url = options.query ? buildUrl(options) : options.url;
+  let params = [url];
+  !!options.data && params.push(options.data);
+  return axios[method].apply(null, params);
+};
+
+const buildAsyncStream = (options) => {
+  let request = buildRequest(options);
+  return Rx.Observable.fromPromise(request)
+};
+
+/**** Store Constructor ****/
 class Store {
 
   constructor(name) {
     this.name = name || '';
+    this._store = ImmutableMap();
   }
 
-  add (key, data) {
+  _add (key, data) {
     if ( arguments.length === 0 ) { throw errors[0] }
     if ( arguments.length === 1 ) {
       key = data.id;
@@ -34,7 +65,7 @@ class Store {
     }
   }
 
-  update (key, data) {
+  _update (key, data) {
     if ( arguments.length === 0 ) { throw errors[0] }
     if ( arguments.length === 1 ) {
       key = data.id;
@@ -49,6 +80,7 @@ class Store {
     }
   }
 
+  // This is where a key or id must be defined
   defineStream (options) {
     let subject = new Rx.Subject();
     let asyncStream = buildAsyncStream(options);
@@ -67,29 +99,7 @@ class Store {
   }
 }
 
-let buildUrl = (options) => {
-    let queryString = '';
-    let url = options.url;
-    let params = options.query;
-    if ( params ) {
-        let buildQuery = (query, key) => [query, key, '=', options[key],'&'].join('');
-        queryString = Object.keys(params).reduce(buildQuery, '?').slice(0,-1);
-    }
-    return url + queryString;
-}
 
-let buildAsyncRequest = (options) => {
-  let method = options.method || 'get';
-  let url = options.query ? buildUrl(options) : options.url;
-  let params = [url];
-  !!options.data && params.push(options.data);
-  return axios[method].apply(null, params);
-}
-
-const buildAsyncStream = (options) => {
-  let request = buildRequest(options);
-  return Rx.Observable.fromPromise(request)
-}
 
 /* Create an async stream
  * param {Object}

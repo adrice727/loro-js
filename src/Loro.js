@@ -105,8 +105,14 @@ class Store {
  *    @property {String} key OR id The unique identifier for the store
  *    @property {Object} query (optional) Query params to be appended to the url
  *    @property {...} data (optional) Data to be included in request
- *    @property {Function} map (optional) Mapping function to be applied to the
+ *    @property {Function} map (optional) Mapping function to be applied to the stream
  */
+
+ /*
+  * TODO: 1. Consider using a single behavior subject which can delegate to the various streams
+  *          instead of returning a subject for each of the streams.
+  *       2. Figure out how the mapping function should be constructed and implemented
+  */
   defineStream (options) {
     if ( !options || !options.url || (!options.key && !options.id ) ) {
       _throwError(2);

@@ -16,7 +16,8 @@ const _errors = {
   0: 'A key is required to add a model to the store',
   1: 'If a key is not provided, the data passed to the store must contain an\
       id parameter which can be used as a key',
-  2: 'A url and a unique key/id is required to define a stream'
+  2: 'A url and a unique key/id is required to define a stream',
+  3: 'A key is required to retrieve a model to the store',
 };
 
 const _throwError = (key) => {
@@ -124,9 +125,17 @@ class Store {
     return subject;
   }
 
-/* @description Combine the individual streams into a metastream and subscribe.
- * @param {Object} map (optional) A function to update the data before it reaches the store.
- */
+  /* @description Returns the Rx Behavior Subject from the store which can be subscribed to.
+   * @param {string} key
+   */
+  get (key) {
+    if ( !key ) { throwError(3); }
+    return this._store.get(key);
+  }
+
+  /* @description Combine the individual streams into a metastream and subscribe.
+  * @param {Object} map (optional) A function to update the data before it reaches the store.
+  */
   fly (map) {
     map = map || _defaultMapFunction;
     let metaStream = Rx.Observable.merge.apply(null, _asyncStreams);

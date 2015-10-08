@@ -2,7 +2,7 @@
 
 A JavaScript library for building stream-based data stores with RxJS and Immutable.js.
 
-*This is intended to provide a layer of abstraction for RxJS and Immutable.js, and is still very much a work in progress.  It may not be possible to abstract away the complexity of RxJS while still providing something of any real value for anything but the most basic of models. Loro isn't yet functional and the below documentation is being used soley to help determine a path forward.*
+*This is intended to provide a layer of abstraction for RxJS and Immutable.js, and is still very much a work in progress.  It may not be possible to abstract away the complexity of RxJS while still providing something of value for anything but the most basic of models. Loro isn't yet functional and the below documentation is soley for the purpose of trying to determine the best interface, the proper level of abstraction, and the path forward for development.*
 
 
 ### Import Loro

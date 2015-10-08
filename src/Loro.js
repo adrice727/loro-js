@@ -64,7 +64,6 @@ class Store {
     this._store = Immutable.Map();
   }
 
-
   /* @descriptions Add a new entry to the store
    * @param {Object} data
    *    @property {}
@@ -125,6 +124,9 @@ class Store {
     return subject;
   }
 
+/* @description Combine the individual streams into a metastream and subscribe.
+ * @param {Object} map (optional) A function to update the data before it reaches the store.
+ */
   fly (map) {
     map = map || _defaultMapFunction;
     let metaStream = Rx.Observable.merge.apply(null, _asyncStreams);

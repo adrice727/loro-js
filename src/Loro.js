@@ -69,7 +69,7 @@ class Store {
    * @param {Object} data
    *    @property {}
    */
-  _add (data) {
+  _add (key, data) {
     if ( arguments.length === 0 ) { throwError(0) }
     if ( arguments.length === 1 ) {
       key = data.key || data.id;
@@ -111,12 +111,13 @@ class Store {
     if ( !options || !options.url || (!options.key && !options.id ) ) {
       _throwError(2);
     }
-    data.key = data.key || data.id;
+    options.key = options.key || options.id;
     let subject = new Rx.Subject();
     let asyncStream = buildAsyncStream(options);
     let mapFn = options.map || _defaultMapFunction;
     let stream = subject
-      .flatMap( data => asyncStream )
+      .flatMap( data => asyncStream(data) )
+      .map( data => { data.key = data.key || options.key })//Key required for store
       .map( mapFn );
 
     _asyncStreams.push(stream);
@@ -131,37 +132,6 @@ class Store {
   }
 }
 
-/* Create an async stream
- * param {Object}
- *   {String} url
- *   {String} ~method
- *   {Object} ~query
- *   {Object} ~data
- *   {Function} ~map
- */
- // This should return a subject that can be used to
-let defineStream = (options) => {
-
-  let subject = new Rx.Subject();
-  let asyncStream = buildAsyncStream(options);
-  let mapFn = options.map || _defaultMapFunction;
-  let stream = subject
-    .flatMap( data => asyncStream )
-    .map( mapFn );
-
-  return subject;
-}
-
-let metaStream = Rx.Observable.merge.apply(null, _asyncStreams)
-  .map( _defaultMapFunction );
-
-metaStream.subscribe( data => _updateStore(data) );
-
-// const projectMetaStream = Rx.Observable.merge(_requestStream, _likeStream)
-//   .tap( console.log('OXOXOXO', this))
-//   .map( response => new Project(response.data) )
-
 export default {
-  Store: Store,
-  defineStream: defineStream
+  Store: Store
 }
